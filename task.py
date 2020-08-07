@@ -1,9 +1,10 @@
 # -*- coding -*-
+#In progress. Currenly returns pressure, demand, head for specified node in specified network
 import os
 import epanet_module.epamodule as em
 
 def HydraAna( inputFile, MyNode ):
-    #Open the EPANET toolkit & hydraulic analysis, load 3-node system
+    #Open the EPANET toolkit & hydraulic analysis, load system
     em.ENopen(inputFile, "task.rpt")
     em.ENopenH()
 
@@ -35,5 +36,6 @@ def HydraAna( inputFile, MyNode ):
 
     print('Node index is %d, node pressure is %d, node demand is %d, node head is %d.' % (nodeindex, pressure, demand, head))
 
+#testing function call
 HydraAna("Threenode-cl-2.inp","2")
 
