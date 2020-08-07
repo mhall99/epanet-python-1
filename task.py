@@ -7,8 +7,8 @@ def HydraAna( inputFile, MyNode, MyLink ):
     em.ENopen(inputFile, "task.rpt")
     em.ENopenH()
 
-    #sets duration of analysis to 36000 seconds (10 hours)
-    em.ENsettimeparam(em.EN_DURATION, 36000)
+    #sets duration of analysis to 600 seconds (10 minutes)
+    em.ENsettimeparam(em.EN_DURATION, 600)
     #nodeCount = em.ENgetcount(em.EN_NODECOUNT)
     #linkCount = em.ENgetcount(em.EN_LINKCOUNT)
 
@@ -16,16 +16,16 @@ def HydraAna( inputFile, MyNode, MyLink ):
     em.ENinitH()
 
     #em.ENsetpatternvalue(1, 1, 10) setting analysis period & step size?
-
+    time = 0;
+    timesteps = []
     NpressureList = []
     NdemandList = []
     NheadList = []
-
     LflowList = []
    
 
     #iterates ten times to accrue values 
-    for x in range(0,10):
+    """for x in range(0,10):
         em.ENrunH() #runs single hydraulic analysis
 
         nodeindex = em.ENgetnodeindex(MyNode); #node stuff
@@ -42,13 +42,37 @@ def HydraAna( inputFile, MyNode, MyLink ):
 
         LflowList.append(Lflow)
 
+        em.ENnextH()"""
+    
+    while (time<=600):
+        em.ENrunH()
+
+        timesteps.append(time)
+
+        nodeindex = em.ENgetnodeindex(MyNode); #node stuff
+        Npressure = em.ENgetnodevalue(nodeindex, em.EN_PRESSURE)
+        Ndemand = em.ENgetnodevalue(nodeindex, em.EN_DEMAND)
+        Nhead = em.ENgetnodevalue(nodeindex, em.EN_HEAD)
+        
+        NpressureList.append(Npressure)
+        NdemandList.append(Ndemand)
+        NheadList.append(Nhead)
+
+        linkindex = em.ENgetlinkindex(MyLink); #link stuff 
+        Lflow = em.ENgetlinkvalue(linkindex, em.EN_FLOW)
+
+        LflowList.append(Lflow)
+
         em.ENnextH()
+        step = em.ENnextH()
+        time = time + step
  
 
     print('List of calculated node pressures.')
     print(*NpressureList, sep = ' units\n')
     print('List of calculated link flowrates.')
     print(*LflowList, sep = ' units\n')
+    print('Time of calculations (seconds)\n',*timesteps)
 
     #print('Node count is %d and link count is %d.' % (nodeCount, linkCount))
     #print('Node index is %d, node pressure is %d, node demand is %d, node head is %d.' % (nodeindex, pressure, demand, head))
