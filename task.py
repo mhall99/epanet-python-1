@@ -38,7 +38,7 @@ def HydraAna( inputFile, MyNode, MyLink ):
         NheadList.append(Nhead)
 
         linkindex = em.ENgetlinkindex(MyLink); #link stuff 
-        Lflow = em.ENgetlinkvalue(nodeindex, em.EN_FLOW)
+        Lflow = em.ENgetlinkvalue(linkindex, em.EN_FLOW)
 
         LflowList.append(Lflow)
 
